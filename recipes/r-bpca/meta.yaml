@@ -1,0 +1,62 @@
+{% set version = '1.2-2' %}
+
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-bpca
+  version: {{ version|replace("-", "_") }}
+
+source:
+  fn: bpca_{{ version }}.tar.gz
+  url:
+    - https://cran.r-project.org/src/contrib/bpca_{{ version }}.tar.gz
+    - https://cran.r-project.org/src/contrib/Archive/bpca/bpca_{{ version }}.tar.gz
+  sha256: a6d966370c0bf524ffd87677cddf21403ed3938afb4b24abafe90c2d96f98d16
+
+build:
+  merge_build_host: True  # [win]
+
+  number: 0
+  noarch: generic
+
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+
+  host:
+    - r-base
+    - r-rgl
+    - r-scatterplot3d
+
+  run:
+    - r-base
+    - r-rgl
+    - r-scatterplot3d
+
+test:
+  commands:
+
+    - $R -e "library('bpca')"           # [not win]
+    - "\"%R%\" -e \"library('bpca')\""  # [win]
+
+about:
+  home: https://CRAN.R-project.org/package=bpca
+  license: GPL (>= 2)
+  summary: Implements biplot (2d and 3d) of multivariate data based on principal components analysis
+    and diagnostic tools of the quality of the reduction.
+  license_family: GPL3
+  license_file: '{{ environ["PREFIX"] }}\/lib\/R\/share\/licenses\/GPL-3'  # [unix]
+  license_file: '{{ environ["PREFIX"] }}\R\share\licenses\GPL-3'  # [win]
+extra:
+   recipe-maintainers:
+    - MathiasHaudgaard
+    - FrodePedersen
+    - ArneKr
+    - johanneskoester
+    - bgruening
+    - daler
+    - jdblischak
